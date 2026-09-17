@@ -121,6 +121,12 @@ async fn do_health_checks(
     // Send health checks for everything in the map.
     futures::stream::iter(address_health.iter_mut())
         .for_each_concurrent(16, async |(&addr, health)| {
+            // If checks_to_down is zero, this disables health checks of healthy
+            // addresses.
+            if check.checks_to_down == 0 && health.is_up() {
+                return;
+            }
+
             let success = health::check(addr, &check.kind).await;
 
             let new_health = health.add_result(success, check);

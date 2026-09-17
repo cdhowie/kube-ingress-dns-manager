@@ -49,6 +49,7 @@ pub struct Route53Config {
 #[derive(Deserialize)]
 pub struct HealthCheck {
     pub checks_to_up: usize,
+    #[serde(default)] // 0 disables checking healthy addresses.
     pub checks_to_down: usize,
 
     #[serde(flatten)]

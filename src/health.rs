@@ -43,7 +43,7 @@ impl Health {
             (false, &Self::Healthy { mut failures }) => {
                 failures += 1;
 
-                if failures >= policy.checks_to_down {
+                if policy.checks_to_down != 0 && failures >= policy.checks_to_down {
                     Self::Unhealthy { successes: 0 }
                 } else {
                     Self::Healthy { failures }
