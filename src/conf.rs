@@ -1,4 +1,4 @@
-use std::num::NonZeroU64;
+use std::num::{NonZeroU64, NonZeroUsize};
 
 use serde::Deserialize;
 
@@ -48,7 +48,7 @@ pub struct Route53Config {
 
 #[derive(Deserialize)]
 pub struct HealthCheck {
-    pub checks_to_up: usize,
+    pub checks_to_up: NonZeroUsize,
     #[serde(default)] // 0 disables checking healthy addresses.
     pub checks_to_down: usize,
 

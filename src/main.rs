@@ -221,10 +221,10 @@ async fn main() -> Result<(), BoxError> {
     // If health checks are enabled, we don't want to take any action until we
     // have done enough health checks that an address could be considered
     // healthy.  This keeps track of how many checks we have left to do.
-    let mut warmup_checks = config
+    let mut warmup_checks: usize = config
         .health_check
         .as_ref()
-        .map_or_default(|c| c.checks_to_up);
+        .map_or_default(|c| c.checks_to_up.into());
 
     let mut nodes: HashMap<String, NodeState> = HashMap::new();
     let mut address_health: HashMap<IpAddr, Health> = HashMap::new();
