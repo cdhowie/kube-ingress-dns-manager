@@ -1,0 +1,28 @@
+[package]
+name = "kube-ingress-dns-manager"
+version = "0.1.0"
+edition = "2024"
+
+[profile.release]
+strip = "symbols"
+lto = "fat"
+
+[features]
+default = ["route53"]
+route53 = ["dep:aws-config", "dep:aws-sdk-route53"]
+
+[dependencies]
+aws-config = { version = "1.12.0", optional = true }
+aws-sdk-route53 = { version = "1.124.0", optional = true }
+chrono = "0.4.45"
+config = "0.15.25"
+futures = "0.3.34"
+k8s-openapi = { version = "0.28.0", features = ["v1_32"] }
+reqwest = { version = "0.13.5", features = ["hickory-dns"] }
+serde = { version = "1.0.229", features = ["derive"] }
+tokio = { version = "1.53.1", features = ["full"] }
+
+[dependencies.kube]
+version = "4.2.0"
+default-features = false
+features = ["client", "rustls-tls", "aws-lc-rs", "runtime"]

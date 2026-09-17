@@ -1,0 +1,5 @@
+target
+**/*.sw?
+.git
+Containerfile
+.containerignore
