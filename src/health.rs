@@ -1,8 +1,11 @@
-use std::{fmt::Display, net::IpAddr, sync::LazyLock, time::Duration};
+use std::{fmt::Display, net::IpAddr, time::Duration};
 
 use tokio::time::timeout;
 
-use crate::conf::{HealthCheck, HealthCheckKind, HttpHealthCheck};
+use crate::{
+    HTTP_CLIENT,
+    conf::{HealthCheck, HealthCheckKind, HttpHealthCheck},
+};
 
 #[derive(Debug, Clone, Copy)]
 pub enum Health {
@@ -49,13 +52,6 @@ impl Health {
         }
     }
 }
-
-static HTTP_CLIENT: LazyLock<reqwest::Client> = LazyLock::new(|| {
-    reqwest::Client::builder()
-        .hickory_dns(true)
-        .build()
-        .unwrap()
-});
 
 pub async fn check(address: IpAddr, check: &HealthCheckKind) -> bool {
     match check {

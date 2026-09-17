@@ -27,10 +27,20 @@ pub struct Dns {
 #[serde(tag = "kind")]
 pub enum DnsProviderKind {
     Simulated,
+    #[cfg(feature = "cloudflare")]
+    Cloudflare(CloudflareConfig),
     #[cfg(feature = "route53")]
     Route53(Route53Config),
 }
 
+#[cfg(feature = "cloudflare")]
+#[derive(Deserialize)]
+pub struct CloudflareConfig {
+    pub zone_id: String,
+    pub api_token: String,
+}
+
+#[cfg(feature = "route53")]
 #[derive(Deserialize)]
 pub struct Route53Config {
     pub hosted_zone_id: String,

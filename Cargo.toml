@@ -8,7 +8,8 @@ strip = "symbols"
 lto = "fat"
 
 [features]
-default = ["route53"]
+default = ["cloudflare", "route53"]
+cloudflare = []
 route53 = ["dep:aws-config", "dep:aws-sdk-route53"]
 
 [dependencies]
@@ -18,7 +19,7 @@ chrono = "0.4.45"
 config = "0.15.25"
 futures = "0.3.34"
 k8s-openapi = { version = "0.28.0", features = ["v1_32"] }
-reqwest = { version = "0.13.5", features = ["hickory-dns"] }
+reqwest = { version = "0.13.5", features = ["hickory-dns", "json"] }
 serde = { version = "1.0.229", features = ["derive"] }
 tokio = { version = "1.53.1", features = ["full"] }
 

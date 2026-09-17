@@ -4,6 +4,8 @@ use futures::future::BoxFuture;
 
 use crate::{BoxError, conf::DnsProviderKind};
 
+#[cfg(feature = "cloudflare")]
+mod cloudflare;
 #[cfg(feature = "route53")]
 mod route53;
 mod simulated;
@@ -35,6 +37,11 @@ impl DnsProvider for BoxDnsProvider {
 pub async fn create_provider(config: DnsProviderKind) -> Result<BoxDnsProvider, BoxError> {
     match config {
         DnsProviderKind::Simulated => Ok(Box::new(simulated::Simulated)),
+
+        #[cfg(feature = "cloudflare")]
+        DnsProviderKind::Cloudflare(config) => {
+            Ok(Box::new(cloudflare::CloudflareProvider::new(config)))
+        }
 
         #[cfg(feature = "route53")]
         DnsProviderKind::Route53(config) => Ok(Box::new(route53::Route53::new(config).await)),

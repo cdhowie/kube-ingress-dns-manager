@@ -1,6 +1,7 @@
 use std::{
     collections::{HashMap, HashSet},
     net::{IpAddr, Ipv4Addr, Ipv6Addr},
+    sync::LazyLock,
     time::Duration,
 };
 
@@ -24,6 +25,13 @@ macro_rules! log {
         println!("[{}] {}", ::chrono::Utc::now(), format_args!($($arg),+))
     };
 }
+
+static HTTP_CLIENT: LazyLock<reqwest::Client> = LazyLock::new(|| {
+    reqwest::Client::builder()
+        .hickory_dns(true)
+        .build()
+        .unwrap()
+});
 
 type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
