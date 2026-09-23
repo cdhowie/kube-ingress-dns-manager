@@ -212,10 +212,11 @@ async fn main() -> Result<(), BoxError> {
     update_interval.set_missed_tick_behavior(MissedTickBehavior::Delay);
 
     // This flag will be true if applying changes is suspended.  This happens if
-    // we lose connection to the K8S API or if an "init" event comes through. We
-    // suspend in those cases until we see an InitDone event so we know we are
-    // working with the full set of nodes before potentially making changes to
-    // DNS.
+    // an "init" event comes through.  After initialization, this would indicate
+    // the watcher stream could not be recovered and we're going to receive the
+    // full data set again.  We suspend in that case until we see an InitDone
+    // event so we know we are working with the full set of nodes before
+    // potentially making changes to DNS.
     let mut suspend = true;
 
     // If health checks are enabled, we don't want to take any action until we
@@ -249,7 +250,6 @@ async fn main() -> Result<(), BoxError> {
                     Ok(e) => e,
                     Err(err) => {
                         log!("Watcher error: {err}");
-                        suspend = true;
                         continue;
                     }
                 };
